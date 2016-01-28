@@ -1,0 +1,62 @@
+{
+  "name": "test-extension",
+  "displayName": "JS Code Assist",
+  "description": "Provides commands to assist JS development",
+  "version": "0.0.1",
+  "publisher": "TomiTurtiainen",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha ./test"
+  },
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "keywords": [
+    "javascript",
+    "refactor"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onCommand:jsCodeAssist.createFunction",
+    "onCommand:jsCodeAssist.extractFunction",
+    "onCommand:jsCodeAssist.wrapInFunction"
+  ],
+  "main": "./src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "jsCodeAssist.createFunction",
+        "title": "Create function"
+      },
+      {
+        "command": "jsCodeAssist.extractFunction",
+        "title": "Extract function"
+      },
+      {
+        "command": "jsCodeAssist.wrapInFunction",
+        "title": "Wrap in function"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomi/vscode-jscodeassist.git"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/tomi/vscode-jscodeassist/issues"
+  },
+  "homepage": "https://github.com/tomi/vscode-jscodeassist/blob/master/README.md",
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "ast-traverse": "^0.1.1",
+    "copy-paste": "^1.1.4",
+    "esprima": "^2.7.1",
+    "q": "^1.4.1"
+  }
+}
