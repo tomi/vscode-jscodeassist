@@ -5,13 +5,23 @@ const vscode = require("./vscode-mock");
 const findArguments = require("../src/parser/function-parser")(vscode).findArguments;
 const LF = "\n";
 
+function assertSetEqual(first, second) {
+    const firstArray = Array.from(first);
+    const secondArray = Array.from(second);
+
+    firstArray.sort();
+    secondArray.sort();
+
+    assert.deepEqual(firstArray, secondArray);
+}
+
 describe("Function params tests", function() {
     it("No variables", function() {
         const js = `var i = 0; hello();`;
         const expected = new Set();
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("Variable in function call", function() {
@@ -19,7 +29,7 @@ describe("Function params tests", function() {
         const expected = new Set(["k"]);
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("Unknown object and assignment", function() {
@@ -27,7 +37,7 @@ describe("Function params tests", function() {
         const expected = new Set(["obj", "a"]);
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("Reserved objects", function() {
@@ -35,7 +45,7 @@ describe("Function params tests", function() {
         const expected = new Set(["obj", "a"]);
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("this keyword", function() {
@@ -43,7 +53,7 @@ describe("Function params tests", function() {
         const expected = new Set();
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("reserved words", function() {
@@ -56,16 +66,16 @@ Object.keys(obj)
         const expected = new Set();
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 
     it("object literals", function() {
         const js = `
 var obj = {a: 10, "b": 20, c: variable };
 `;
-        const expected = new Set("variable");
+        const expected = new Set(["variable"]);
         const actual = findArguments(js);
 
-        assert.deepEqual(actual, expected);
+        assertSetEqual(actual, expected);
     });
 });
