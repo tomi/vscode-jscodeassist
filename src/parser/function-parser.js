@@ -4,7 +4,7 @@ const esprima = require("esprima");
 const traverse = require("ast-traverse");
 
 const globals = new Set(["Array", "Date", "Math", "Number", "Object",
-    "String", "RegExp", "Boolean", "Set", "document", "window"]);
+    "String", "RegExp", "Boolean", "Set", "document", "window", "undefined"]);
 
 function FunctionParser(vscode) {
     const Range    = vscode.Range;
