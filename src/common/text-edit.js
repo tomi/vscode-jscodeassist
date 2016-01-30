@@ -6,7 +6,7 @@
  */
 function getMinIndent(text) {
     const indents = Array.isArray(text) ?
-        text.map(line => line.match(/^\s+/) || "") :
+        text.map(line => (line.match(/^\s+/) || [""])[0]) :
         text.match(/^\s*/gm);
 
     if (indents === null || indents.length === 0) {
@@ -30,7 +30,7 @@ function getMinIndent(text) {
  * Removes indent that all lines have from text
  */
 function removeIndent(lines, indent) {
-    const regex = `/^${ indent.replace("\t", "\\t") }/`;
+    const regex = new RegExp(`^${ indent.replace("\t", "\\t") }`);
 
     return lines.map(line => line.replace(regex, ""));
 }

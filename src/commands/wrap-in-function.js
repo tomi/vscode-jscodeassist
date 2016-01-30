@@ -23,8 +23,9 @@ function createMethod() {
             }
 
             const editor    = vscode.window.activeTextEditor;
-            const selection = SelectionUtil.expandSelection(editor.document, editor.selection);
-            const text      = SelectionUtil.selectionAsLines(editor.document, selection);
+            const document  = editor.document;
+            const selection = SelectionUtil.expandSelection(document, editor.selection);
+            const text      = SelectionUtil.selectionAsLines(document, selection);
             const indent    = TextEdit.getMinIndent(text);
             const body      = TextEdit.removeIndent(text, indent);
             const functionStr = JsBuilder.functionDef({
@@ -33,7 +34,11 @@ function createMethod() {
                 body: body
             });
 
-            addFunctionToDocument(editor, selection, functionStr);
+            const indented = TextEdit.indent(functionStr, indent);
+            addFunctionToDocument(editor, selection, indented);
+
+            const newSelection = SelectionUtil.selectLines(document, selection.start.line, body.length + 2);
+            editor.selection = newSelection;
         });
     } catch (x) {
         console.log(x);

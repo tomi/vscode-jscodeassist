@@ -26,8 +26,6 @@ function doEdit(selection, functionDef, functionCall) {
             editBuilder.insert(endOfFile, `${LF}${LF}${functionDef}`);
         });
     }
-
-    Copy.copy(functionDef);
 }
 
 function extractMethod() {
@@ -38,14 +36,15 @@ function extractMethod() {
             return;
         }
 
-        const editor      = vscode.window.activeTextEditor;
-        const text        = editor.document.getText(editor.selection);
-        const args        = Array.from(findArguments(text));
+        const editor   = vscode.window.activeTextEditor;
+        const document = editor.document;
+        const text     = document.getText(editor.selection);
+        const args     = Array.from(findArguments(text));
 
-        const selection   = SelectionUtil.trimSelection(text, editor.selection);
-        const lines       = SelectionUtil.selectionAsLines(editor.document, selection);
-        const indent      = TextEdit.getMinIndent(lines);
-        const body        = TextEdit.removeIndent(lines, indent);
+        const selection = SelectionUtil.expandSelection(document, editor.selection);
+        const lines     = SelectionUtil.selectionAsLines(document, selection);
+        const indent    = TextEdit.getMinIndent(lines);
+        const body      = TextEdit.removeIndent(lines, indent);
 
         const functionDef = JsBuilder.functionDef({
             name:      funcName,

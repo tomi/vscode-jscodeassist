@@ -3,6 +3,7 @@
 function SelectionUtil(vscode) {
     const Position = vscode.Position;
     const Range    = vscode.Range;
+    const Selection= vscode.Selection;
 
     function numNewLines(text) {
         return (text.match(/\r\n|\r|\n/g) || []).length;
@@ -32,12 +33,16 @@ function SelectionUtil(vscode) {
     }
 
     /**
-     * Expands given selection to cover all text on selected lines
+     * Expands given selection to cover all text on selected lines.
+     * Ignores empty last line
      */
     function expandSelection(document, selection) {
+        const endStartsALine = selection.end.character === 0;
+        const endLine = selection.end.line - (endStartsALine ? 1 : 0);
+
         const range = new Range(
             selection.start.line, 0,
-            selection.end.line, Number.MAX_SAFE_INTEGER
+            endLine, Number.MAX_SAFE_INTEGER
         )
 
         return document.validateRange(range);
@@ -52,10 +57,24 @@ function SelectionUtil(vscode) {
         return text.match(/[^\r\n]+/g);
     }
 
+    /**
+     *
+     */
+    function selectLines(document, startLine, numLines) {
+        const range = new Range(
+            startLine, 0,
+            startLine + numLines - 1, Number.MAX_SAFE_INTEGER);
+
+        const validRange = document.validateRange(range);
+
+        return new Selection(validRange.start, validRange.end);
+    }
+
     return {
         trimSelection,
         selectionAsLines,
-        expandSelection
+        expandSelection,
+        selectLines
     };
 }
 
